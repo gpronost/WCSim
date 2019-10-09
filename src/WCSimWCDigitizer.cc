@@ -5,7 +5,7 @@
 // for memset
 
 #ifndef NPMTS_VERBOSE
-#define NPMTS_VERBOSE 10
+#define NPMTS_VERBOSE 100000000000000000000000000
 #endif
 
 #ifndef HYPER_VERBOSITY
@@ -201,13 +201,19 @@ WCSimWCDigitizerSKI::~WCSimWCDigitizerSKI(){
 
 void WCSimWCDigitizerSKI::DigitizeHits(WCSimWCDigitsCollection* WCHCPMT) {
 
+#ifdef WCSIMWCDIGITIZER_VERBOSE
   if(detectorElement=="tank") G4cout << "TANK # ";
   if(detectorElement=="OD")   G4cout << "OD # ";
   G4cout << "WCSimWCDigitizerSKI::DigitizeHits START WCHCPMT->entries() = " << WCHCPMT->entries() << G4endl;
+#endif
 
   //Get the PMT info for hit time smearing
   G4String WCIDCollectionName = myDetector->GetIDCollectionName();
   WCSimPMTObject * PMT = myDetector->GetPMTPointer(WCIDCollectionName);
+  
+  // G. Pronost 2019/09/09:
+  // Hit need to be sorted! (This is done no where!)
+  std::sort(WCHCPMT->GetVector()->begin(), WCHCPMT->GetVector()->end(), WCSimWCDigi::SortFunctor_Hit());
 
   //loop over entires in WCHCPMT, each entry corresponds to
   //the photons on one PMT
@@ -313,6 +319,7 @@ void WCSimWCDigitizerSKI::DigitizeHits(WCSimWCDigitsCollection* WCHCPMT) {
 								intgr_start + PMT->HitTimeSmearing(Q),
 								peSmeared, digi_comp);
 	      if(accepted) {
+	        //G4cout << " Accepted " << G4endl;
 		digi_unique_id++;
 	      }
 	      assert(digi_comp.size());
@@ -380,7 +387,7 @@ void WCSimWCDigitizerSKI::DigitizeHits(WCSimWCDigitsCollection* WCHCPMT) {
 	  }
 	}//ip (totalpe)
     }//i (WCHCPMT->entries())
-  G4cout<<"WCSimWCDigitizerSKI::DigitizeHits END DigiStore->entries() " << DigiStore->entries() << "\n";
+  //G4cout<<"WCSimWCDigitizerSKI::DigitizeHits END DigiStore->entries() " << DigiStore->entries() << "\n";
   
 #ifdef WCSIMWCDIGITIZER_VERBOSE
   G4cout<<"\n\n\nCHECK DIGI COMP:"<<G4endl;

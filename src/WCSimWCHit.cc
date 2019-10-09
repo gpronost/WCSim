@@ -102,3 +102,22 @@ void WCSimWCHit::Print()
   G4cout << "size: " << time.size() << G4endl;
 }
 
+
+
+// Sorting following Hit Time
+bool WCSimWCHit::SortFunctor_Hit::operator() (
+		const WCSimWCHit * const &a,
+		const WCSimWCHit * const &b) const {
+	
+	G4double ta, tb;
+	if ( a->time.size() > 0 ) 	
+		ta = a->time[0];
+	else return false;
+	
+	if ( b->time.size() > 0 )
+		tb = b->time[0];
+	else return true;
+	
+	return ta < tb;
+}
+

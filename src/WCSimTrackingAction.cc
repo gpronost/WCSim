@@ -45,6 +45,19 @@ void WCSimTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
     }
   else 
     fpTrackingManager->SetStoreTrajectory(false);
+    
+#if 1
+  { // kill alphas to prevent segmentation fault
+    G4ParticleDefinition* particle = aTrack->GetDefinition();
+    G4String name   = particle->GetParticleName();
+    
+    if( name == "alpha" ){
+      G4Track* tr = (G4Track*) aTrack;
+      tr->SetTrackStatus(fStopButAlive);
+      //tr->SetTrackStatus(fStopAndKill);
+    }
+  }
+#endif
 }
 
 void WCSimTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
@@ -60,6 +73,10 @@ void WCSimTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
     anInfo = (WCSimTrackInformation*)(aTrack->GetUserInformation());
   else anInfo = new WCSimTrackInformation();
 
+  //G4cout << " Tracking " << aTrack->GetDefinition()->GetPDGEncoding() << G4endl;
+  
+  double gamma_min_energy = 50.*CLHEP::MeV;
+
   // is it a primary ?
   // is the process in the set ? 
   // is the particle in the set ?
@@ -68,7 +85,7 @@ void WCSimTrackingAction::PostUserTrackingAction(const G4Track* aTrack)
   if( aTrack->GetParentID()==0 || 
       ((creatorProcess!=0) && ProcessList.count(creatorProcess->GetProcessName()) ) || 
       (ParticleList.count(aTrack->GetDefinition()->GetPDGEncoding()) )
-      || (aTrack->GetDefinition()->GetPDGEncoding()==22 && aTrack->GetTotalEnergy() > 50.0*MeV)
+      || (aTrack->GetDefinition()->GetPDGEncoding()==22 && aTrack->GetTotalEnergy() > gamma_min_energy)
       )
   {
     // if so the track is worth saving

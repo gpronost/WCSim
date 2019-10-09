@@ -92,11 +92,6 @@ void WCSimVisManager::RegisterGraphicsSystems () {
   RegisterGraphicsSystem (new G4OpenGLStoredX);
 #endif
 
-#ifdef G4VIS_USE_OPENGLQT
-  RegisterGraphicsSystem (new G4OpenGLImmediateQt);
-  RegisterGraphicsSystem (new G4OpenGLStoredQt);
-#endif
-
 #ifdef G4VIS_USE_OPENGLWIN32
   RegisterGraphicsSystem (new G4OpenGLImmediateWin32);
   RegisterGraphicsSystem (new G4OpenGLStoredWin32);
@@ -105,6 +100,11 @@ void WCSimVisManager::RegisterGraphicsSystems () {
 #ifdef G4VIS_USE_OPENGLXM
   RegisterGraphicsSystem (new G4OpenGLImmediateXm);
   RegisterGraphicsSystem (new G4OpenGLStoredXm);
+#endif
+
+#ifdef G4VIS_USE_OPENGLQT
+  RegisterGraphicsSystem (new G4OpenGLImmediateQt);
+  RegisterGraphicsSystem (new G4OpenGLStoredQt);
 #endif
 
 #ifdef G4VIS_USE_OIX
@@ -141,7 +141,10 @@ void WCSimVisManager::RegisterGraphicsSystems () {
     G4cout <<
       "\nYou have successfully chosen to use the following graphics systems."
 	 << G4endl;
-    PrintAvailableGraphicsSystems ();
+//    PrintAvailableGraphicsSystems ();
+    PrintAvailableGraphicsSystems (GetVerbosityValue(fVerbose));
+
+
   }
   RegisterModel(mymodel);
 

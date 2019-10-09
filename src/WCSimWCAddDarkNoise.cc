@@ -73,6 +73,7 @@ void WCSimWCAddDarkNoise::SetPMTDarkDefaults()
   double defaultPMTDarkRate = PMT->GetDarkRate() * conversion_to_kHz;
   double defaultConvRate = PMT->GetDarkRateConversionFactor();
 
+  G4cout << "Setting default DarkNoise ... " << PMTDarkRate << G4endl;
   //Only set the defaults if the user hasn't overwritten the unphysical defaults
   if(PMTDarkRate < -98)
     PMTDarkRate = defaultPMTDarkRate;
@@ -257,6 +258,7 @@ void WCSimWCAddDarkNoise::AddDarkNoiseBeforeDigi(WCSimWCDigitsCollection* WCHCPM
 #endif
     for( int i = 0; i < nnoispmt; i++ )
       {
+        //G4cout << "Dark noise here " << this->PMTDarkRate << G4endl;
 	//time of noise hit to be generated
 	//A time from t=num1 to num2
 	current_time = num1 + G4UniformRand()*windowsize;

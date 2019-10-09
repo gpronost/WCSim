@@ -81,12 +81,10 @@ WCSimEventAction::WCSimEventAction(WCSimRunAction* myRun,
   ////////////////////
   ///// -- OD -- /////
   ////////////////////
-  WCSimWCPMT* WCDMPMT_OD;
-  WCDMPMT_OD = new WCSimWCPMT( "WCReadoutPMT_OD", myDetector, "OD");
+  WCSimWCPMT* WCDMPMT_OD = new WCSimWCPMT( "WCReadoutPMT_OD", myDetector, "OD");
   DMman->AddNewModule(WCDMPMT_OD);
 
-  WCSimWCAddDarkNoise* WCDNM_OD;
-  WCDNM_OD = new WCSimWCAddDarkNoise("WCDarkNoise_OD", detectorConstructor, "OD");
+  WCSimWCAddDarkNoise* WCDNM_OD = new WCSimWCAddDarkNoise("WCDarkNoise_OD", detectorConstructor, "OD");
   DMman->AddNewModule(WCDNM_OD);
 }
 
@@ -140,25 +138,24 @@ void WCSimEventAction::CreateDAQInstances()
   ////////////////////
   if(detectorConstructor->GetIsODConstructed()) {
     if (DigitizerChoice == "SKI") {
-      WCSimWCDigitizerSKI
-          *WCDM_OD = new WCSimWCDigitizerSKI("WCReadoutDigits_OD", detectorConstructor, DAQMessenger, "OD");
+      WCSimWCDigitizerSKI *WCDM_OD = new WCSimWCDigitizerSKI("WCReadoutDigits_OD", detectorConstructor, DAQMessenger, "OD");
       DMman->AddNewModule(WCDM_OD);
     }
 
     //create your choice of trigger module
     if (TriggerChoice == "NDigits") {
-      WCSimWCTriggerNDigits
-          *WCTM_OD = new WCSimWCTriggerNDigits("WCReadout_OD", detectorConstructor, DAQMessenger, "OD");
+      WCSimWCTriggerNDigits *WCTM_OD = new WCSimWCTriggerNDigits("WCReadout_OD", detectorConstructor, DAQMessenger, "OD");
       DMman->AddNewModule(WCTM_OD);
-    } else if (TriggerChoice == "NDigits2") {
-      WCSimWCTriggerNDigits2
-          *WCTM_OD = new WCSimWCTriggerNDigits2("WCReadout_OD", detectorConstructor, DAQMessenger, "OD");
+    } 
+    else if (TriggerChoice == "NDigits2") {
+      WCSimWCTriggerNDigits2 *WCTM_OD = new WCSimWCTriggerNDigits2("WCReadout_OD", detectorConstructor, DAQMessenger, "OD");
       DMman->AddNewModule(WCTM_OD);
-    } else if (TriggerChoice == "NoTrigger") {
-      WCSimWCTriggerNoTrigger
-          *WCTM = new WCSimWCTriggerNoTrigger("WCReadout_OD", detectorConstructor, DAQMessenger, "OD");
+    } 
+    else if (TriggerChoice == "NoTrigger") {
+      WCSimWCTriggerNoTrigger *WCTM = new WCSimWCTriggerNoTrigger("WCReadout_OD", detectorConstructor, DAQMessenger, "OD");
       DMman->AddNewModule(WCTM);
-    } else {
+    } 
+    else {
       G4cerr << "Unknown TriggerChoice " << TriggerChoice << G4endl;
       exit(-1);
     }
@@ -227,10 +224,10 @@ void WCSimEventAction::EndOfEventAction(const G4Event* evt)
     G4String name =   WCIDCollectionName;
     G4int collectionID = SDman->GetCollectionID(name);
     if(collectionID>-1) WCHC = (WCSimWCHitsCollection*)HCE->GetHC(collectionID);
-    G4cout << G4endl;
-    G4cout << "WCSimEventAction::EndOfEventAction ☆ (WCSimWCHitsCollection*)" << WCIDCollectionName
-           << " has " << WCHC->entries() << " entries" << G4endl;
-    G4cout << G4endl;
+    //G4cout << G4endl;
+    //G4cout << "WCSimEventAction::EndOfEventAction ☆ (WCSimWCHitsCollection*)" << WCIDCollectionName
+    //       << " has " << WCHC->entries() << " entries" << G4endl;
+    //G4cout << G4endl;
   }
 
   // To use Do like This:
@@ -337,14 +334,14 @@ void WCSimEventAction::EndOfEventAction(const G4Event* evt)
   // Repeat the steps for the OD
   // ----------------------------------------------------------------------
 
-  WCSimWCHitsCollection* WCHC_OD;
+  WCSimWCHitsCollection* WCHC_OD=NULL;
   WCSimWCPMT* WCDMPMT_OD=NULL;
   WCSimWCAddDarkNoise* WCDNM_OD=NULL;
   WCSimWCDigitizerBase* WCDM_OD=NULL;
   WCSimWCTriggerBase* WCTM_OD=NULL;
   G4int WCDChitsID_OD;
   WCSimWCDigitsCollection* WCDC_hits_OD=NULL;
-  WCSimWCTriggeredDigitsCollection *WCDC_OD;
+  WCSimWCTriggeredDigitsCollection *WCDC_OD=NULL;
   if(detectorConstructor->GetIsODConstructed()){
     WCHC_OD = 0;
     G4String WCODCollectionName = detectorConstructor->GetODCollectionName();
@@ -352,10 +349,10 @@ void WCSimEventAction::EndOfEventAction(const G4Event* evt)
       G4String name = WCODCollectionName;
       G4int collectionID = SDman->GetCollectionID(name);
       if(collectionID>-1) WCHC_OD = (WCSimWCHitsCollection*)HCE->GetHC(collectionID);
-      G4cout << G4endl;
-      G4cout<< "WCSimEventAction::EndOfEventAction() (WCSimWCHitsCollection*)" << WCODCollectionName
-            << " has " << WCHC_OD->entries() << " entries" << G4endl;
-      G4cout << G4endl;
+      //G4cout << G4endl;
+      //G4cout<< "WCSimEventAction::EndOfEventAction() (WCSimWCHitsCollection*)" << WCODCollectionName
+      //      << " has " << WCHC_OD->entries() << " entries" << G4endl;
+      //G4cout << G4endl;
     }
 
     WCDMPMT_OD = (WCSimWCPMT*)DMman->FindDigitizerModule("WCReadoutPMT_OD");
@@ -379,7 +376,7 @@ void WCSimEventAction::EndOfEventAction(const G4Event* evt)
     WCDChitsID_OD = DMman->GetDigiCollectionID("WCRawPMTSignalCollection_OD");
     WCDC_hits_OD = (WCSimWCDigitsCollection*) DMman->GetDigiCollection(WCDChitsID_OD);
     // printouts
-    G4cout << "WCSimEventAction::EndOfEventAction() retrieving raw hits" << G4endl
+    /*G4cout << "WCSimEventAction::EndOfEventAction() retrieving raw hits" << G4endl
            << " (WCSimWCDigitsCollection*)WCRawPMTSignalCollection_OD for FillRootEvent, which has ";
     if(WCDC_hits_OD){
       G4cout << WCDC_hits_OD->entries();
@@ -391,14 +388,15 @@ void WCSimEventAction::EndOfEventAction(const G4Event* evt)
     G4int WCDCID_OD = DMman->GetDigiCollectionID("WCDigitizedCollection_OD");
     WCDC_OD = (WCSimWCTriggeredDigitsCollection*) DMman->GetDigiCollection(WCDCID_OD);
     // printouts
-    G4cout << "WCSimEventAction::EndOfEventAction() retrieving readout hits"
-           << " (WCSimWCTriggeredDigitsCollection*)WCDigitizedCollection_OD for FillRootEvent, which has ";
+    //G4cout << "WCSimEventAction::EndOfEventAction() retrieving readout hits"
+    //       << " (WCSimWCTriggeredDigitsCollection*)WCDigitizedCollection_OD for FillRootEvent, which has ";
     if(WCDC_hits_OD){
       G4cout << WCDC_OD->entries();
     } else {
       G4cout << "no";
     }
     G4cout << " entries" << G4endl;
+    */
   }
 
   // ----------------------------------------------------------------------
@@ -626,7 +624,7 @@ void WCSimEventAction::EndOfEventAction(const G4Event* evt)
   }
 
   //fill correct variables for track from decay
-   G4cout << " Filling Root Event " << G4endl;
+   //G4cout << " Filling Root Event " << G4endl;
 
    //   G4cout << "event_id: " << &event_id << G4endl;
    // G4cout << "jhfNtuple: " << &jhfNtuple << G4endl;
@@ -812,7 +810,7 @@ void WCSimEventAction::FillRootEvent(G4int event_id,
     WCTM = (WCSimWCTriggerBase*)DMman->FindDigitizerModule("WCReadout_OD");
   }
   int ngates = WCTM->NumberOfGatesInThisEvent();
-  G4cout << "ngates "<<detectorElement<<" =  " << ngates << "\n";
+  //G4cout << "ngates "<<detectorElement<<" =  " << ngates << "\n";
   for (int index = 0 ; index < ngates ; index++) 
     {
       if (index >=1 ) {
@@ -1063,7 +1061,7 @@ void WCSimEventAction::FillRootEvent(G4int event_id,
     // Both the pre- and post-PMT smearing hit times are accessible
     // Choose to save just the pre-smeared times for now
 #ifdef _SAVE_RAW_HITS_VERBOSE
-    G4cout<<"RAW HITS"<<G4endl;
+    G4cout<<"RAW HITS "<< WCDC_hits->entries() << G4endl;
 #endif
     wcsimrootevent->SetNumTubesHit(WCDC_hits->entries());
     std::vector<float> truetime, smeartime;
@@ -1181,8 +1179,8 @@ void WCSimEventAction::FillRootEvent(G4int event_id,
     
   for (int i = 0 ; i < wcsimrootsuperevent->GetNumberOfEvents(); i++) {
     wcsimrootevent = wcsimrootsuperevent->GetTrigger(i);
-    G4cout << ">>>Root event "
-	   <<std::setw(5)<<wcsimrootevent->GetHeader()->GetEvtNum()<<"\n";
+    //G4cout << ">>>Root event "
+    //	   <<std::setw(5)<<wcsimrootevent->GetHeader()->GetEvtNum()<<"\n";
     //   if (WCDC){
     // G4cout <<"WC digi:"<<std::setw(4)<<wcsimrootevent->GetNcherenkovdigihits()<<"  ";
     // G4cout <<"WC digi sumQ:"<<std::setw(4)<<wcsimrootevent->GetSumQ()<<"  ";

@@ -10,6 +10,11 @@
 #include <fstream>
 
 #include "WCSimRootOptions.hh"
+#include "WCSimGenerator_Radioactivity.hh"
+
+#include "TF2.h"
+#include "TH1D.h"
+#include "TH2D.h"
 
 class WCSimDetectorConstruction;
 class G4ParticleGun;
@@ -20,6 +25,15 @@ class G4Generator;
 
 class WCSimPrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
 {
+
+  struct radioactive_source {
+    G4String IsotopeName;
+    G4String IsotopeLocation;
+    G4double IsotopeActivity;
+    G4double IsotopeActivityMin;
+    G4int    IsotopeForce;
+  };
+
 public:
   WCSimPrimaryGeneratorAction(WCSimDetectorConstruction*);
   ~WCSimPrimaryGeneratorAction();
@@ -59,6 +73,9 @@ public:
   G4double GetYDir() {return yDir;};
   G4double GetZDir() {return zDir;};
 
+  G4bool GetStorePhotons() {return storephotons;}
+  void SetStorePhotons(G4double tparam) {storephotons=tparam;}
+  
   G4String GetGeneratorTypeString();
   
   void SaveOptionsToOutput(WCSimRootOptions * wcopt);
@@ -74,6 +91,14 @@ private:
   G4bool   useGunEvt;
   G4bool   useLaserEvt;  //T. Akiri: Laser flag
   G4bool   useGPSEvt;
+  G4bool   useRadioactiveEvt;
+  G4bool   useRadonEvt;
+  G4bool   useVolumeGenerator;
+  G4bool   useCosmics;
+  
+  std::vector<struct radioactive_source> radioactive_sources;
+  G4double radioactive_time_window;
+  
   std::fstream inputFile;
   G4String vectorFileName;
   G4bool   GenerateVertexInRock;
@@ -96,6 +121,33 @@ private:
 
   G4int    _counterRock; 
   G4int    _counterCublic; 
+  
+  // Use Histograms to generate cosmics
+  TH2D *hFluxCosmics;
+  TH2D *hEmeanCosmics;
+
+  // Set cosmics altitude
+  G4double altCosmics;
+  
+  G4bool storephotons;
+  
+  // For volume generator
+  G4String vol_type;
+  G4int    vol_pdgid;
+  G4double vol_e;
+  G4String vol_loc;
+  G4double vol_wall;
+  
+  // G. Pronost 2019/09/06
+  // For radioactivity in water (obsolete)
+  std::map<std::string, double> fMeanRadioactivity; 
+  TF2* fWaterRadioactivityLinear;
+  
+  // For Rn event
+  WCSimGenerator_Radioactivity* myRn222Generator;
+  G4int fRnScenario;
+  
+  
 public:
 
   inline void SetMulineEvtGenerator(G4bool choice) { useMulineEvt = choice; }
@@ -108,8 +160,44 @@ public:
   inline void SetLaserEvtGenerator(G4bool choice) { useLaserEvt = choice; }
   inline G4bool IsUsingLaserEvtGenerator()  { return useLaserEvt; }
 
+  inline void AddRadioactiveSource(G4String IsotopeName, G4String IsotopeLocation, G4double IsotopeActivity, G4double IsotopeActivityMin, G4int IsotopeForce){
+    struct radioactive_source r;
+    r.IsotopeName = IsotopeName;
+    r.IsotopeLocation = IsotopeLocation;
+    r.IsotopeActivity = IsotopeActivity;
+    r.IsotopeActivityMin = IsotopeActivityMin;
+    r.IsotopeForce = IsotopeForce;
+    radioactive_sources.push_back(r);
+  }
+  inline std::vector<struct radioactive_source> Radioactive_Sources()  { return radioactive_sources; }
+  
+  inline void SetRadioactiveEvtGenerator(G4bool choice) { useRadioactiveEvt = choice; }
+  inline G4bool IsUsingRadioactiveEvtGenerator()  { return useRadioactiveEvt; }
+  
+  inline void SetRadonEvtGenerator(G4bool choice) { useRadonEvt = choice; }
+  inline G4bool IsUsingRadonEvtGenerator()  { return useRadonEvt; }
+  
+  inline void SetRadonScenario(G4int choice) { fRnScenario = choice; }
+  
+  inline void SetVolumeEvtGenerator(G4bool choice) { useVolumeGenerator = choice; }
+  inline G4bool IsUsingVolumeEvtGenerator()  { return useVolumeGenerator; }
+  
+  inline void SetRadioactiveTimeWindow(G4double choice) { radioactive_time_window = choice; }
+  inline G4double GetRadioactiveTimeWindow()  { return radioactive_time_window; }
+  
   inline void SetGPSEvtGenerator(G4bool choice) { useGPSEvt = choice; }
   inline G4bool IsUsingGPSEvtGenerator()  { return useGPSEvt; }
+
+  inline void SetCosmicsGenerator(G4bool choice) { useCosmics = choice; }
+  inline G4bool IsUsingCosmicsGenerator()  { return useCosmics; }
+  
+  inline void SetVolumeSource(G4String GenType, G4int ParticleID, G4double ParticleEnergy, G4String ParticleLocation, G4double WallDistance=0.){
+    vol_type  = GenType;
+    vol_pdgid = ParticleID;
+    vol_e     = ParticleEnergy;
+    vol_loc   = ParticleLocation;
+    vol_wall  = WallDistance;
+  }
 
   inline void OpenVectorFile(G4String fileName) 
   {

@@ -103,6 +103,12 @@ void WCSimRunAction::BeginOfRunAction(const G4Run* /*aRun*/)
   //set detector & random options
   wcsimdetector->SaveOptionsToOutput(wcsimrootoptions);
   wcsimrandomparameters->SaveOptionsToOutput(wcsimrootoptions);
+  
+  //set Tree for gathering photon info inside stepping action
+  photonTree = new TTree("photons","Photon Tree");
+  wcsimPhoEvt = new photonEvt();
+  photonTree->Branch("phoEvt",wcsimPhoEvt,
+                     "trackID/I:parentID/I:pos[3]/D:distance/D:wl/D:proc/I");
 }
 
 void WCSimRunAction::EndOfRunAction(const G4Run*)
@@ -180,9 +186,10 @@ void WCSimRunAction::FillGeoTree(){
 
 
   pmtradius = wcsimdetector->GetPMTSize1();
-  numpmt = wcsimdetector->GetTotalNumPmts();
   pmtradiusOD = wcsimdetector->GetODPMTSize();
+  numpmt = wcsimdetector->GetTotalNumPmts();
   numpmtOD = wcsimdetector->GetTotalNumODPmts();
+  
   orientation = 0;
   
   wcsimrootgeom-> SetWCPMTRadius(pmtradius);
@@ -225,7 +232,8 @@ void WCSimRunAction::FillGeoTree(){
     rot[2] = pmt->Get_orienz();
     tubeNo = pmt->Get_tubeid();
     cylLoc = pmt->Get_cylocation();
-    wcsimrootgeom-> SetPMT(i,tubeNo,cylLoc,rot,pos);
+    //wcsimrootgeom-> SetPMT(i,tubeNo,cylLoc,rot,pos);
+    wcsimrootgeom-> SetPMT(i+fpmts->size(),tubeNo+fpmts->size(),cylLoc,rot,pos);
   }
   if (fpmts->size() != (unsigned int)numpmt) {
     G4cout << "Mismatch between number of OD pmts and pmt list in geofile.txt!!"<<G4endl;
@@ -235,6 +243,8 @@ void WCSimRunAction::FillGeoTree(){
   wcsimrootgeom-> SetWCNumPMT(numpmt);
   wcsimrootgeom-> SetODWCNumPMT(numpmtOD);
 
+  G4cout << " Filling geoTree ... " << G4endl;
   geoTree->Fill();
+  G4cout << " ... done " << G4endl;
   geoTree->Write();
 }

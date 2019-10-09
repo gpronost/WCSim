@@ -219,8 +219,8 @@ void WCSimDetectorConstruction::SetHyperKGeometry()
   WCPMTName           = PMT->GetPMTName();
   WCPMTExposeHeight   = PMT->GetExposeHeight();
   WCPMTRadius         = PMT->GetRadius();
-  WCIDDiameter          = 70.8*m; // = 74m - 2*(60cm ID wall + 1m OD)
-  WCIDHeight            = 54.8*m; // = 60m - 2*(60cm ID wall + 2m OD)
+  WCIDDiameter          = 64.8*m; // = 68m - 2*(60cm ID wall + 1m OD)
+  WCIDHeight            = 66.8*m; // = 72m - 2*(60cm ID wall + 2m OD)
   WCBarrelPMTOffset     = WCPMTRadius; //offset from vertical
   WCPMTperCellHorizontal= 4;
   WCPMTperCellVertical  = 3;
@@ -243,8 +243,8 @@ void WCSimDetectorConstruction::SetHyperKWithODGeometry()
   WCPMTName           = PMT->GetPMTName();
   WCPMTExposeHeight   = PMT->GetExposeHeight();
   WCPMTRadius         = PMT->GetRadius();
-  WCIDDiameter          = 70.8*m; // = 74m - 2*(60cm ID wall + 1m OD)
-  WCIDHeight            = 54.8*m; // = 60m - 2*(60cm ID wall + 2m OD)
+  WCIDDiameter          = 64.8*m; // = 68m - 2*(60cm ID wall + 1m OD)
+  WCIDHeight            = 66.8*m; // = 72m - 2*(60cm ID wall + 2m OD)
   WCBarrelPMTOffset     = WCPMTRadius; //offset from vertical
   WCPMTperCellHorizontal= 4;
   WCPMTperCellVertical  = 3;
@@ -260,7 +260,7 @@ void WCSimDetectorConstruction::SetHyperKWithODGeometry()
   //////////////////////////////////////
   // Cave Parameters --- Beta version //
   //////////////////////////////////////
-  CaveTyvekSheetThickness  = 1.0*mm; // Quite Standard I guess
+  CaveTyvekSheetThickness  = 1.*mm; // Quite Standard I guess
 
   ////////////////////////////////////
   // OD Parameters --- Beta version //
@@ -271,9 +271,12 @@ void WCSimDetectorConstruction::SetHyperKWithODGeometry()
   WCODLateralWaterDepth    = 1.*m;
   WCODHeightWaterDepth     = 2.*m;
   WCODDeadSpace            = 600.*mm;
-  WCODTyvekSheetThickness  = 1.0*mm; // Quite standard I guess
-  WCODDiameter             = WCIDDiameter + 2*(WCBlackSheetThickness+WCODDeadSpace+WCODTyvekSheetThickness);
-
+  WCODTyvekSheetThickness  = 1.*mm; // Quite standard I guess
+  //WCODDiameter             = WCIDDiameter + 2*(WCBlackSheetThickness+WCODDeadSpace+WCODTyvekSheetThickness);
+  WCODDiameter             = WCIDDiameter + 2*(WCBlackSheetThickness+WCODDeadSpace+WCODTyvekSheetThickness+WCODWLSPlatesThickness);
+  WCODWLSPlatesThickness   = 1.*cm; //
+  WCODWLSPlatesLength      = 60.*cm; //  
+  
   // OD PMTs //
   WCODCollectionName = WCDetectorName + "-glassFaceWCPMT_OD";
   WCSimPMTObject *PMTOD = CreatePMTObject("PMT8inch", WCODCollectionName);
@@ -297,8 +300,20 @@ void WCSimDetectorConstruction::SetHyperKWithODGeometry()
   // OD caps //
   // WCODCapPMTSpacing = 100*cm;
   WCODCapPMTSpacing  = (pi*WCIDDiameter/(round(WCIDDiameter*sqrt(pi*WCPMTODPercentCoverage)/(10.0*WCPMTODRadius))));
-  WCODCapEdgeLimit = WCIDDiameter/2.0 - WCPMTODRadius;
+  //WCODCapEdgeLimit = WCIDDiameter/2.0 - WCPMTODRadius;
+  WCODCapEdgeLimit = WCIDDiameter/2.0 - WCODWLSPlatesLength/2;
+  
+  // TEST combined PMT collection for stacking action
+  std::vector<G4String> WCColName;
+  WCColName.push_back(WCIDCollectionName);
+  WCColName.push_back(WCODCollectionName);
+  CreateCombinedPMTQE(WCColName);
+  isCombinedPMTCollectionDefined=true;
 
+  // TEST WLS collection for stacking action
+  G4String WLSType = "EljenEJ286";
+  isWLSFilled = true;
+  CreateWLSObject(WLSType);
 }
 
 void WCSimDetectorConstruction::SetHyperKGeometry_20perCent()
@@ -309,8 +324,8 @@ void WCSimDetectorConstruction::SetHyperKGeometry_20perCent()
   WCPMTName           = PMT->GetPMTName();
   WCPMTExposeHeight   = PMT->GetExposeHeight();
   WCPMTRadius         = PMT->GetRadius();
-  WCIDDiameter          = 70.8*m; // = 74m - 2*(60cm ID wall + 1m OD)
-  WCIDHeight            = 54.8*m; // = 60m - 2*(60cm ID wall + 2m OD)
+  WCIDDiameter          = 64.8*m; // = 68m - 2*(60cm ID wall + 1m OD)
+  WCIDHeight            = 66.8*m; // = 72m - 2*(60cm ID wall + 2m OD)
   WCBarrelPMTOffset     = WCPMTRadius; //offset from vertical
   WCPMTperCellHorizontal= 4;
   WCPMTperCellVertical  = 3;
