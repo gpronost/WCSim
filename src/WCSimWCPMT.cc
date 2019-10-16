@@ -176,15 +176,14 @@ void WCSimWCPMT::MakePeCorrection(WCSimWCHitsCollection* WCHC)
 
 	  for (G4int ip =0; ip < (*WCHC)[i]->GetTotalPe(); ip++){
 	  
-	    /* Replaced by /grdm/decayBiasProfile biasprofile.dat on 2019/09/11
 	    // Reset the time to have "reasonnable" timing
 	    // This modification is important in case of very late hit physics (such as in radioactive decays)     
 	    // for which time easy goes > 1e9 ns and cause bug in digitizer
 	    if ( i == 0 && ip == 0 && (*WCHC)[i]->GetTime(ip) > 1e5 ) { // Set Max at 10 musec
-	      G4cout << " Apply time correction to event hits of " << (*WCHC)[i]->GetTime(ip) << " ns" << G4endl;
+	      //G4cout << " Apply time correction to event hits of " << (*WCHC)[i]->GetTime(ip) << " ns" << G4endl;
 	      first_time = (*WCHC)[i]->GetTime(ip);
 	    } 
-	    */                                       
+	                                         
 	    
 	    time_true = (*WCHC)[i]->GetTime(ip);
 	    time_PMT  = time_true - first_time; //currently no PMT time smearing applied

@@ -66,13 +66,13 @@ WCSimPrimaryGeneratorMessenger::WCSimPrimaryGeneratorMessenger(WCSimPrimaryGener
   param->SetDefaultValue("0");
   isotopeCmd->SetParameter(param);
   
-  radonCmd = new G4UIcmdWithAString("/mygen/radon",this);
-  radonCmd->SetGuidance("Select scalling scenario");
-  radonCmd->SetGuidance("[usage] /mygen/radon SCENARIO ");
-  radonCmd->SetGuidance("     SCENARIO : A, B, C");
+  radonScalingCmd = new G4UIcmdWithAString("/mygen/radon_scaling",this);
+  radonScalingCmd->SetGuidance("Select scalling scenario");
+  radonScalingCmd->SetGuidance("[usage] /mygen/radon SCENARIO ");
+  radonScalingCmd->SetGuidance("     SCENARIO : A, B, C");
   param = new G4UIparameter("SCENARIO",'s',true);
   param->SetDefaultValue("C");
-  radonCmd->SetParameter(param);
+  radonScalingCmd->SetParameter(param);
   
   //G. Pronost: Addition of Volume generator
   volgenCmd = new G4UIcmdWithAString("/mygen/volume",this);
@@ -109,7 +109,7 @@ WCSimPrimaryGeneratorMessenger::~WCSimPrimaryGeneratorMessenger()
   
   delete radioactive_time_window_Cmd;
   delete isotopeCmd;
-  delete radonCmd;
+  delete radonScalingCmd;
 }
 
 void WCSimPrimaryGeneratorMessenger::SetNewValue(G4UIcommand * command,G4String newValue)
@@ -219,9 +219,9 @@ void WCSimPrimaryGeneratorMessenger::SetNewValue(G4UIcommand * command,G4String 
   }
   
   //G. Pronost: Addition of Radon generator
-  if( command==radonCmd )
+  if( command==radonScalingCmd )
   {
-    RadonCommand(newValue);
+    RadonScalingCommand(newValue);
   }
 
   if( command==radioactive_time_window_Cmd )
@@ -252,17 +252,17 @@ void WCSimPrimaryGeneratorMessenger::IsotopeCommand(G4String newValue)
 
 }
 
-void WCSimPrimaryGeneratorMessenger::RadonCommand(G4String newValue)
+void WCSimPrimaryGeneratorMessenger::RadonScalingCommand(G4String newValue)
 {
 
    G4Tokenizer next( newValue );
 
-   G4String scenario = next();
-   G4int iScenario = 0;
+  G4String scenario = next();
+  G4int iScenario = 0;
    
-   if ( scenario == "A" ) iScenario = 1;
-   if ( scenario == "B" ) iScenario = 2;
-   if ( scenario == "C" ) iScenario = 3;
+  if ( scenario == "A" ) iScenario = 1; // Relative scaling with respect to full ID volume (Pessimistic)
+  if ( scenario == "B" ) iScenario = 2; // Relative scaling with respect to fiducial volume
+  if ( scenario == "C" ) iScenario = 3; // Absolute scaling with respect to ID border (Optimistic)
    
    myAction->SetRadonScenario(iScenario);
 
