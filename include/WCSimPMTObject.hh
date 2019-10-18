@@ -279,4 +279,128 @@ class PMT3inch : public WCSimPMTObject
   G4float  GetDarkRateConversionFactor();
 };
 
+class PMT3inchGT : public WCSimPMTObject
+{
+
+public:
+
+  PMT3inchGT();
+  ~PMT3inchGT();
+
+public:
+  G4String GetPMTName();
+  G4double GetExposeHeight();
+  G4double GetRadius();
+  G4float* Getqpe();
+  G4float* GetQE();
+  G4float* GetQEWavelength();
+  G4float  GetmaxQE();
+  float    HitTimeSmearing(float);
+  G4double GetPMTGlassThickness();
+  G4float  GetDarkRate();
+  G4float  GetDarkRateConversionFactor();
+};
+
+
+// ToDo: make object of classes instead of infinite cp-pastes
+class PMT3inchR12199_02 : public WCSimPMTObject
+{
+
+public:
+  
+  PMT3inchR12199_02();
+  ~PMT3inchR12199_02();
+ 
+public:
+  G4String GetPMTName() ;
+  G4double GetExposeHeight();
+  G4double GetRadius();
+  G4float* Getqpe();
+  G4float* GetQE();
+  G4float* GetQEWavelength();
+  G4float  GetmaxQE();
+  float    HitTimeSmearing(float);
+  G4double GetPMTGlassThickness();
+  G4float  GetDarkRate();
+  G4float  GetDarkRateConversionFactor();
+protected:
+  G4float* GetCollectionEfficiencyArray();
+};
+
+//B.Q, 2019/01/18
+// ToDo: make object of classes instead of infinite cp-pastes
+class PMT3inchR14374 : public WCSimPMTObject
+{
+
+public:
+  
+  PMT3inchR14374();
+  ~PMT3inchR14374();
+ 
+public:
+  G4String GetPMTName() ;
+  G4double GetExposeHeight();
+  G4double GetRadius();
+  G4float* Getqpe();
+  G4float* GetQE();
+  G4float* GetQEWavelength();
+  G4float  GetmaxQE();
+  float    HitTimeSmearing(float);
+  G4double GetPMTGlassThickness();
+  G4float  GetDarkRate();
+  G4float  GetDarkRateConversionFactor();
+protected:
+  G4float* GetCollectionEfficiencyArray();
+};
+
+// ToDo: make object of classes instead of infinite cp-pastes
+class PMT4inchR12199_02 : public WCSimPMTObject
+{
+
+public:
+  
+  PMT4inchR12199_02();
+  ~PMT4inchR12199_02();
+ 
+public:
+  G4String GetPMTName() ;
+  G4double GetExposeHeight();
+  G4double GetRadius();
+  G4float* Getqpe();
+  G4float* GetQE();
+  G4float* GetQEWavelength();
+  G4float  GetmaxQE();
+  float    HitTimeSmearing(float);
+  G4double GetPMTGlassThickness();
+  G4float  GetDarkRate();
+  G4float  GetDarkRateConversionFactor();
+protected:
+  G4float* GetCollectionEfficiencyArray();
+};
+
+// ToDo: make object of classes instead of infinite cp-pastes
+class PMT5inchR12199_02 : public WCSimPMTObject
+{
+
+public:
+  
+  PMT5inchR12199_02();
+  ~PMT5inchR12199_02();
+ 
+public:
+  G4String GetPMTName() ;
+  G4double GetExposeHeight();
+  G4double GetRadius();
+  G4float* Getqpe();
+  G4float* GetQE();
+  G4float* GetQEWavelength();
+  G4float  GetmaxQE();
+  float    HitTimeSmearing(float);
+  G4double GetPMTGlassThickness();
+  G4float  GetDarkRate();
+  G4float  GetDarkRateConversionFactor();
+protected:
+  G4float* GetCollectionEfficiencyArray();
+};
+
 #endif
